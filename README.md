@@ -1,9 +1,9 @@
 # HAB-VOR
 A High Altitude Balloon which uses VOR stations to navigate
 
-## VOR Station Simulator - 144.00
+## VOR Station Simulator - 144.000MHz
 
-A GNU Radio based VOR Station which transmits on HAM frequencies using a HackRF.
+A GNU Radio based VOR Station configured to transmit on HAM radio frequencies using a HackRF.
 
 ![diagram](vor_station_144/screenshots/GNURadio_VOR_Station.png "GNU Radio VOR Station Diagram")
 
@@ -11,7 +11,7 @@ A GNU Radio based VOR Station which transmits on HAM frequencies using a HackRF.
 
 ## VOR Tracker
 
-A slightly modified version of https://github.com/TLeconte/vortrack to allow for decoding VOR stations transmitting on HAM frequencies.
+This is a slightly modified version of https://github.com/TLeconte/vortrack that allow the program to decode VOR stations on HAM frequencies.
 
 Frequency: 144.000000 MHz
 
