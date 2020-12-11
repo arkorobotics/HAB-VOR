@@ -13,7 +13,7 @@ A GNU Radio based VOR Station which transmits on HAM frequencies using a HackRF.
 
 A slightly modified version of https://github.com/TLeconte/vortrack to allow for decoding VOR stations transmitting on HAM frequencies.
 
-Frequency: 144.001800 MHz
+Frequency: 144.000000 MHz
 
 Gain: 0 (when directly connecting the HackRF output to the RTL USB input via SMA cable)
 
@@ -32,5 +32,5 @@ For airspy :
 
 ### Run
 ```
-$ ./vortrack -g 0 144.0018
+$ ./vortrack -g 0 144.00
 ```
