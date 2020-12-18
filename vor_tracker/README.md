@@ -15,7 +15,7 @@ $ sudo apt install librtlsdr
 
 For rtl sdr :
 ```
-$ make -f Makefile.rtl
+$ make
 ```
 
 ## Usage

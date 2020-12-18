@@ -23,12 +23,14 @@ Note: When using the RTL USB to track stations, the center frequency may shift d
 
 For rtl sdr :
 ```
-$ make -f Makefile.rtl
+$ cd vor_tracker
+$ make
 ```
 
 ### Run
 ```
-$ ./vortrack -g 0 144.00
+$ cd vor_tracker
+$ ./vortracker -g 0 144.00
 ```
 
 ![tracker](vor_station_144/screenshots/vortracker_screenshot.png "VOR Tracker")
