@@ -26,10 +26,6 @@ For rtl sdr :
 $ make -f Makefile.rtl
 ```
 
-For airspy :
-> make -f Makefile.airspy
-
-
 ### Run
 ```
 $ ./vortrack -g 0 144.00
