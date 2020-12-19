@@ -9,9 +9,9 @@ A GNU Radio based VOR Station configured to transmit on HAM radio frequencies us
 
 ![gui](vor_station_144/screenshots/GNURadio_VOR_Station_GUI.png "GNU Radio VOR Station GUI")
 
-## VOR Tracker
+## VOR Navigator
 
-This is a slightly modified version of https://github.com/TLeconte/vortrack that allow the program to decode VOR stations on HAM frequencies.
+VOR Navigator is based on [vortrack](https://github.com/TLeconte/vortrack).
 
 Frequency: 144.000000 MHz
 
@@ -23,14 +23,15 @@ Note: When using the RTL USB to track stations, the center frequency may shift d
 
 For rtl sdr :
 ```
-$ cd vor_tracker
+$ cd vor-nav
 $ make
 ```
 
 ### Run
+
 ```
-$ cd vor_tracker
-$ ./vortracker -g 0 144.00
+$ cd vor-nav
+$ ./vor-nav -g 0 144.00
 ```
 
 ![tracker](vor_station_144/screenshots/vortracker_screenshot.png "VOR Tracker")

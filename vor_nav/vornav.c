@@ -1,7 +1,6 @@
 /*
- *  Copyright (c) 2017 Thierry Leconte (f4dwv)
- *
- *
+ *   Authors: Arko
+ *   		  Based on 'vortrack' - Copyright (c) 2014 Thierry Leconte (f4dwv)
  */
 
 #include <stdlib.h>
@@ -12,42 +11,29 @@
 #include <getopt.h>
 #include <math.h>
 #include <complex.h>
-#include "vortrack.h"
+#include "vornav.h"
 
 int verbose = 0;
 int interval=2;
 int freq ;
 
-#if (WITH_RTL)
 int initRtl(int dev_index, int fr);
 int runRtlSample(void);
 int devid = 0;
 int ppm = 0;
-int gain = 1000;
-#endif
-#ifdef WITH_AIRSPY
-int init_airspy(int freq);
-int runAirspy(void);
-int gain = 18;
-#endif
+int gain = 0;
 
 
 static void sighandler(int signum);
 
 static void usage(void)
 {
-	fprintf(stderr,
-		"vor receiver Copyright (c) 2018 Thierry Leconte \n\n");
-#if WITH_AIRSPY
-	fprintf(stderr, "Usage: vortrack [-g gain] [-l interval ] frequency in MHz\n");
-	fprintf(stderr, " -g gain :\t\t\tlinearity gain [0-21] default 18\n");
-#endif
-#if WITH_RTL
+	fprintf(stderr, "vor-nav by Arko \n\n");
+	fprintf(stderr, "vortrack by Thierry Leconte Copyright (c) 2018 \n\n");
 	fprintf(stderr, "Usage: vortrack [-g gain] [-l interval ] [-p ppm] [-r device] frequency in MHz\n\n");
 	fprintf(stderr, " -g gain :\t\t\tgain in tenth of db (ie : 500 = 50 db)\n");
 	fprintf(stderr, " -p ppm :\t\t\tppm freq shift\n");
 	fprintf(stderr, " -r n :\t\t\trtl device number\n");
-#endif
 	fprintf(stderr, " -l interval :\t\t\ttime between two measurements\n");
 	exit(1);
 }
@@ -68,14 +54,12 @@ int main(int argc, char **argv)
 		case 'g':
 			gain = atoi(optarg);
 			break;
-#ifdef WITH_RTL
 		case 'p':
 			ppm = atoi(optarg);
 			break;
 		case 'r':
 			devid = atoi(optarg);
 			break;
-#endif
 		case 'h':
 		default:
 			usage();
@@ -88,7 +72,7 @@ int main(int argc, char **argv)
 	}
 	freq = (int)(atof(argv[optind]) * 1000000.0);
 
-	if(freq<108000000 || freq > 150000000) {
+	if(freq<VOR_BAND_MIN || freq > 150000000) {
 		fprintf(stderr, "invalid frequency\n");
 		exit(-2);
 	}
@@ -100,17 +84,11 @@ int main(int argc, char **argv)
 	sigaction(SIGTERM, &sigact, NULL);
 	sigaction(SIGQUIT, &sigact, NULL);
 
-#if (WITH_RTL)
+
 	if (initRtl(devid, freq))
 		exit(-1);
 	runRtlSample();
-#endif
 
-#ifdef WITH_AIRSPY
-	if (init_airspy(freq))
-		exit(-1);
-	runAirspy();
-#endif
 	sighandler(0);
 	exit(0);
 

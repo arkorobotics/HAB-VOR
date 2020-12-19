@@ -1,5 +1,6 @@
 /*
- *  Copyright (c) 2014 Thierry Leconte (f4dwv)
+ *   Authors: Arko
+ *   		  Based on 'vortrack' - Copyright (c) 2014 Thierry Leconte (f4dwv)
  *
  *   
  *   This code is free software; you can redistribute it and/or modify
@@ -27,7 +28,7 @@
 #include <complex.h>
 
 #include <rtl-sdr.h>
-#include "vortrack.h"
+#include "vornav.h"
 
 #define INRATE 2000000
 #define IFFREQ 50000
@@ -154,8 +155,19 @@ static void in_callback(unsigned char *rtlinbuff, unsigned int nread, void *ctx)
 
 int runRtlSample(void)
 {
+	/*
+	* function rtlsdr_read_async
+	* param dev the device handle given by rtlsdr_open()
+	* param cb callback function to return received samples
+	* param ctx user specific context to pass via the callback function
+	* param buf_num optional buffer count, buf_num * buf_len = overall buffer size
+	*		  set to 0 for default buffer count (15)
+	* param buf_len optional buffer length, must be multiple of 512,
+	*		  should be a multiple of 16384 (URB size), set to 0
+	*		  for default buffer length (16 * 32 * 512)
+	* return 0 on success
+	*/
 	int r;
-
 	r = rtlsdr_read_async(dev, in_callback, NULL, 8, INBUFSZ);
 	return r;
 }

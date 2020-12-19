@@ -1,8 +1,8 @@
-# VOR Tracker
+# VOR Navigator
 
 A VOR station scanning, tracking, and localization module.
 
-VOR Tracking is based on [vortrack](https://github.com/TLeconte/vortrack).
+VOR Navigator is based on [vortrack](https://github.com/TLeconte/vortrack).
 
 ## Dependencies
 
@@ -20,7 +20,7 @@ $ make
 
 ## Usage
 
-> vortracker [-g gain] [-l interval ] [-r device] frequency (in Mhz)
+> vor-nav [-g gain] [-l interval ] [-r device] frequency (in Mhz)
 
  -l interval : interval in second between two measurements
 
@@ -33,5 +33,5 @@ $ make
 ## Example
 
 ```
-$ ./vortracker -g 0 144.00
+$ ./vor-nav -g 0 144.00
 ```

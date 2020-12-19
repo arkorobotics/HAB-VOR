@@ -1,7 +1,6 @@
 /*
- *  Copyright (c) 2017 Thierry Leconte (f4dwv)
- *
- *
+ *   Authors: Arko
+ *   		  Based on 'vortrack' - Copyright (c) 2014 Thierry Leconte (f4dwv)
  */
 
 #include <stdlib.h>
@@ -12,7 +11,7 @@
 #include <getopt.h>
 #include <math.h>
 #include <complex.h>
-#include "vortrack.h"
+#include "vornav.h"
 
 extern int interval;
 
