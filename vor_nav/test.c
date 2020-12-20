@@ -1,6 +1,6 @@
 #include "stdio.h"
 #include "math.h"
-#include "vortrack.h"
+#include "vornav.h"
 
 extern void vor(float S);
 int interval=1;

@@ -13,23 +13,26 @@
 #include <complex.h>
 #include "vornav.h"
 
-int verbose = 0;
-int interval=2;
-int freq ;
 
+// RTL USB Variables and Functions
 int initRtl(int dev_index, int fr);
-int runRtlSample(void);
+int runRtlVorTracker(int fr);
+int cancelRtlVorTracker(void);
 int devid = 0;
 int ppm = 0;
 int gain = 0;
+int verbose = 0;
+int interval=2;
+int freq;
 
-
+// Program Functions
 static void sighandler(int signum);
 
+// Prints program usage information
 static void usage(void)
 {
 	fprintf(stderr, "vor-nav by Arko \n\n");
-	fprintf(stderr, "vortrack by Thierry Leconte Copyright (c) 2018 \n\n");
+	fprintf(stderr, "vortrack by Thierry Leconte \n\n");
 	fprintf(stderr, "Usage: vortrack [-g gain] [-l interval ] [-p ppm] [-r device] frequency in MHz\n\n");
 	fprintf(stderr, " -g gain :\t\t\tgain in tenth of db (ie : 500 = 50 db)\n");
 	fprintf(stderr, " -p ppm :\t\t\tppm freq shift\n");
@@ -38,9 +41,11 @@ static void usage(void)
 	exit(1);
 }
 
+// Main
 int main(int argc, char **argv)
 {
-	int i, c;
+	// Process program arguement inputs
+	int c;
 	struct sigaction sigact;
 
 	while ((c = getopt(argc, argv, "vg:l:p:r:h")) != EOF) {
@@ -70,13 +75,16 @@ int main(int argc, char **argv)
 		fprintf(stderr, "need frequency\n");
 		exit(-2);
 	}
-	freq = (int)(atof(argv[optind]) * 1000000.0);
 
-	if(freq<VOR_BAND_MIN || freq > 150000000) {
+	// Read initial center frequency arguement
+	freq = (int)(atof(argv[optind]) * 1000000.0);
+	// Check frequency arguement is in-band
+	if(freq<VOR_BAND_MIN || freq > HAM_2M_BAND_MAX) {
 		fprintf(stderr, "invalid frequency\n");
 		exit(-2);
 	}
 
+	// Configure signal handler and actions
 	sigact.sa_handler = sighandler;
 	sigemptyset(&sigact.sa_mask);
 	sigact.sa_flags = 0;
@@ -84,14 +92,24 @@ int main(int argc, char **argv)
 	sigaction(SIGTERM, &sigact, NULL);
 	sigaction(SIGQUIT, &sigact, NULL);
 
-
-	if (initRtl(devid, freq))
+	// Initialize RTL USB Device
+	if (initRtl(devid, freq)){
 		exit(-1);
-	runRtlSample();
+	}
+
+	// TODO: Implement Scan, Identify, Track, and Localize state machine
+
+	// Run VOR Tracker
+	runRtlVorTracker(freq);
+	
+	// wait for VOR station status
+	//
+
+	// Cancel VOR Tracker
+	cancelRtlVorTracker();
 
 	sighandler(0);
 	exit(0);
-
 }
 
 

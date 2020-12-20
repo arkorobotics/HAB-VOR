@@ -1,6 +1,5 @@
 /*
- *   Authors: Arko
- *   		  Based on 'vortrack' - Copyright (c) 2014 Thierry Leconte (f4dwv)
+ *   'vortrack' - Copyright (c) 2014 Thierry Leconte (f4dwv)
  */
 
 #include <stdlib.h>
@@ -16,27 +15,50 @@
 extern int interval;
 
 typedef struct {
- complex double xv[8], yv[8];
+	complex double xv[8], yv[8];
 } filterstate_t;
 
-static complex double filter510(complex double V , filterstate_t *st) {
-	st->xv[0] = st->xv[1]; st->xv[1] = st->xv[2]; st->xv[2] = st->xv[3]; st->xv[3] = st->xv[4]; 
-        st->xv[4] = V ;
-        st->yv[0] = st->yv[1]; st->yv[1] = st->yv[2]; st->yv[2] = st->yv[3]; st->yv[3] = st->yv[4]; 
-        st->yv[4] =   (st->xv[0] + st->xv[4]) +   1.3724127962 * (st->xv[1] + st->xv[3]) +   0.7448255925 * st->xv[2]
-                     + ( -0.9133512299 * st->yv[2]) + (  1.9094231878 * st->yv[3]);
-        return(st->yv[4]);
+static complex double filter510(complex double V , filterstate_t *st) 
+{
+	
+	st->xv[0] = st->xv[1]; 
+	st->xv[1] = st->xv[2]; 
+	st->xv[2] = st->xv[3]; 
+	st->xv[3] = st->xv[4]; 
+    st->xv[4] = V ;
+
+    st->yv[0] = st->yv[1]; 
+	st->yv[1] = st->yv[2]; 
+	st->yv[2] = st->yv[3]; 
+	st->yv[3] = st->yv[4]; 
+    st->yv[4] = (st->xv[0] + st->xv[4]) \
+				+ 1.3724127962 * (st->xv[1] + st->xv[3]) \
+				+ 0.7448255925 * st->xv[2] \
+                + (-0.9133512299 * st->yv[2]) \
+				+ (1.9094231878 * st->yv[3]);
+    return(st->yv[4]);
 }
 
-static complex double filterlow(complex double V, filterstate_t *st) {
+static complex double filterlow(complex double V, filterstate_t *st) 
+{
 
-	st->xv[0] = st->xv[1]; st->xv[1] = st->xv[2]; st->xv[2] = st->xv[3]; st->xv[3] = st->xv[4]; 
-        st->xv[4] = V ;
-        st->yv[0] = st->yv[1]; st->yv[1] = st->yv[2]; st->yv[2] = st->yv[3]; st->yv[3] = st->yv[4]; 
-        st->yv[4] =   (st->xv[0] + st->xv[4]) +   0.0000142122 * st->xv[1] +   0.0000142122 * st->xv[3]
-                     -   1.9999715756 * st->xv[2]
-                     + ( -0.9972352026 * st->yv[2]) + (  1.9972326511 * st->yv[3]);
-        return(st->yv[4]);
+	st->xv[0] = st->xv[1]; 
+	st->xv[1] = st->xv[2]; 
+	st->xv[2] = st->xv[3]; 
+	st->xv[3] = st->xv[4]; 
+    st->xv[4] = V ;
+
+    st->yv[0] = st->yv[1]; 
+	st->yv[1] = st->yv[2]; 
+	st->yv[2] = st->yv[3]; 
+	st->yv[3] = st->yv[4]; 
+    st->yv[4] = (st->xv[0] + st->xv[4]) \
+				+ 0.0000142122 * st->xv[1] \
+				+ 0.0000142122 * st->xv[3] \
+                - 1.9999715756 * st->xv[2] \
+                + (-0.9972352026 * st->yv[2]) \
+				+ (1.9972326511 * st->yv[3]);
+    return(st->yv[4]);
 }
 
 void vor(float S)
@@ -69,7 +91,8 @@ void vor(float S)
 	sig30=filterlow(sig30,&flt_s);
 
 	A=carg(sig30*conj(ref30))+26*2.0*M_PI*30/FSINT;
-	if(n>0) {
+	if(n>0) 
+	{
 		if((A-pA)>M_PI) uw-=2.0*M_PI;
 		if((A-pA)<-M_PI) uw+=2.0*M_PI;
 		sum+=A+uw;
@@ -77,7 +100,8 @@ void vor(float S)
 	pA=A;
 
 	n++;
-	if(n>interval*FSINT) {
+	if(n>interval*FSINT) 
+	{
 		double avg=fmod(180.0/M_PI*sum/n,360.0);
 		if(avg<0) avg+=360;
 		printf("%5.1f\n",avg);

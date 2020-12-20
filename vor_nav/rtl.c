@@ -30,12 +30,6 @@
 #include <rtl-sdr.h>
 #include "vornav.h"
 
-#define INRATE 2000000
-#define IFFREQ 50000
-#define DOWNSC (INRATE/FSINT)
-
-#define INBUFSZ (DOWNSC*2048)
-
 extern int ppm;
 extern int verbose;
 extern int gain;
@@ -90,7 +84,7 @@ int initRtl(int dev_index, int fr)
 		return r;
 	}
 
-	rtlsdr_set_tuner_gain_mode(dev, 1);	/* no agc */
+	rtlsdr_set_tuner_gain_mode(dev, 1);	// no agc
 	r = rtlsdr_set_tuner_gain(dev, nearest_gain(gain));
 	if (r < 0)
 		fprintf(stderr, "WARNING: Failed to set gain.\n");
@@ -117,9 +111,9 @@ int initRtl(int dev_index, int fr)
 		fprintf(stderr, "WARNING: Failed to reset buffers.\n");
 	}
 
-	for (i = 0; i < DOWNSC; i++) {
-		Osc[i] =
-		    cexpf(-I * i * 2 * M_PI * (float)IFFREQ / (float)INRATE);
+	for (i = 0; i < DOWNSC; i++) 
+	{
+		Osc[i] = cexpf(-I * i * 2 * M_PI * (float)IFFREQ / (float)INRATE);
 	}
 
 	return 0;
@@ -136,7 +130,8 @@ static void in_callback(unsigned char *rtlinbuff, unsigned int nread, void *ctx)
 		return;
 	}
 
-	for (i = 0; i < nread;) {
+	for (i = 0; i < nread;) 
+	{
 		float Is, Qs;
 
 		Is = (float)rtlinbuff[i++] - 127.5;
@@ -145,7 +140,8 @@ static void in_callback(unsigned char *rtlinbuff, unsigned int nread, void *ctx)
 		D += (Is + Qs * I) * Osc[idx];
 		idx++;
 
-		if (idx == DOWNSC) {
+		if (idx == DOWNSC) 
+		{
 			vor(cabs(D) / (float)DOWNSC / 128.0);
 			idx = 0;
 			D = 0;
@@ -153,21 +149,28 @@ static void in_callback(unsigned char *rtlinbuff, unsigned int nread, void *ctx)
 	}
 }
 
-int runRtlSample(void)
+int runRtlVorTracker(int fr)
 {
-	/*
-	* function rtlsdr_read_async
-	* param dev the device handle given by rtlsdr_open()
-	* param cb callback function to return received samples
-	* param ctx user specific context to pass via the callback function
-	* param buf_num optional buffer count, buf_num * buf_len = overall buffer size
-	*		  set to 0 for default buffer count (15)
-	* param buf_len optional buffer length, must be multiple of 512,
-	*		  should be a multiple of 16384 (URB size), set to 0
-	*		  for default buffer length (16 * 32 * 512)
-	* return 0 on success
-	*/
 	int r;
+
+	r = rtlsdr_set_center_freq(dev, fr - IFFREQ);
+	if (r < 0) {
+		fprintf(stderr, "WARNING: Failed to set center freq.\n");
+	}
+
+	r = rtlsdr_reset_buffer(dev);
+	if (r < 0) {
+		fprintf(stderr, "WARNING: Failed to reset buffers.\n");
+	}
+	
 	r = rtlsdr_read_async(dev, in_callback, NULL, 8, INBUFSZ);
+	return r;
+}
+
+int cancelRtlVorTracker(void)
+{
+
+	int r;
+	r = rtlsdr_cancel_async(dev);
 	return r;
 }

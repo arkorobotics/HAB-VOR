@@ -20,4 +20,4 @@ test:	vor.o test.o
 	$(CC) -o test vor.o test.o $(LIBS) $(LDFLAGS)
 
 clean:
-	rm -f *.o vor-nav
+	rm -f *.o vor-nav test
